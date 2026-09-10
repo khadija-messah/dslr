@@ -36,19 +36,45 @@ def Mymean(column, count):
         sum += value
     mean = sum / count if count > 0 else 0
     return mean
+def Mymin(column):
+    min_value = float('inf')
+    for value in column:
+        if value < min_value:
+            min_value = value
+    return min_value
+def Mymax(column):
+    max_value = float('-inf')
+    for value in column:
+        if value > max_value:
+            max_value = value
+    return max_value
+def StandardDeviation(column, mean, count):
+    sum = 0
+    for value in column:
+        sum += (value - mean) ** 2
+    variance = sum / count if count > 0 else 0
+    std_dev = variance ** 0.5
+    return std_dev
 
 def MyDescribe(df):
+
     print("Describing data...")
     countdf = len(df)
     meanArithmancy = Mymean(df["Arithmancy"],countdf)
     meanAstronomy = Mymean(df["Astronomy"],countdf)
     meanHerbology = Mymean(df["Herbology"],countdf)
-    print(f"DataFrame length: {countdf}")
-    print(f"Mean of Arithmancy column: {meanArithmancy}, mean described by pandas: {df['Arithmancy'].mean()}")
-    print(f"Mean of Astronomy column: {meanAstronomy}, mean described by pandas: {df['Astronomy'].mean()}")
-    print(f"Mean of Herbology column: {meanHerbology}, mean described by pandas: {df['Herbology'].mean()}")
-    print("Data description completed successfully.")
 
+    std_devArithmancy = StandardDeviation(df["Arithmancy"], meanArithmancy, countdf)
+    std_devAstronomy = StandardDeviation(df["Astronomy"], meanAstronomy, countdf)
+    std_devHerbology = StandardDeviation(df["Herbology"], meanHerbology, countdf)
+
+    minArithmancy = Mymin(df["Arithmancy"])
+    minAstronomy = Mymin(df["Astronomy"])
+    minHerbology = Mymin(df["Herbology"])
+
+    maxArithmancy = Mymax(df["Arithmancy"])
+    maxAstronomy = Mymax(df["Astronomy"])
+    maxHerbology = Mymax(df["Herbology"])
 
 def main():
     if not ParcingFile():
