@@ -29,18 +29,24 @@ def Mymean(column, count):
         sum += value
     mean = sum / count if count > 0 else 0
     return mean
+
+
 def Mymin(column):
     min_value = float('inf')
     for value in column:
         if value < min_value:
             min_value = value
     return min_value
+
+
 def Mymax(column):
     max_value = float('-inf')
     for value in column:
         if value > max_value:
             max_value = value
     return max_value
+
+
 def StandardDeviation(column, mean, count):
     sum = 0
     for value in column:
@@ -58,6 +64,8 @@ def MyMedian(column):
     else:
         median = (sorted_column[n // 2 - 1] + sorted_column[n // 2]) / 2
     return median
+
+
 def Myquartile25(column):
     sorted_column = sorted(column)
     n = len(sorted_column)
@@ -78,43 +86,38 @@ def Myquartile75(column):
 
 def MyDescribe(df):
 
+    df = df.select_dtypes(include="number")
     countdf = len(df)
-    print("arithmancy     astronomy     herbology")
-    data = [{
-        "count": countdf,
-        "countArithmancy": countdf,
-        "countAstronomy": countdf,
-        "countHerbology": countdf
-    }]
+    data = {
+        "count":[],
+        "mean":[],
+        "std":[],
+        "min":[],
+        "25%":[],
+        "50%":[],
+        "75%":[],
+        "max":[]
+    }
+    for i in df:
+        data["count"].append(countdf)
+        data["mean"].append(Mymean(df[i],countdf))
+        data["std"].append(StandardDeviation(df[i],Mymean(df[i],countdf),countdf))
+        data["min"].append(Mymin(df[i]))
+        data["25%"].append(Myquartile25(df[i]))
+        data["50%"].append(MyMedian(df[i]))
+        data["75%"].append(Myquartile75(df[i]))
+        data["max"].append(Mymax(df[i]))
 
-    meanArithmancy = Mymean(df["Arithmancy"],countdf)
-    meanAstronomy = Mymean(df["Astronomy"],countdf)
-    meanHerbology = Mymean(df["Herbology"],countdf)
-
-    std_devArithmancy = StandardDeviation(df["Arithmancy"], meanArithmancy, countdf)
-    std_devAstronomy = StandardDeviation(df["Astronomy"], meanAstronomy, countdf)
-    std_devHerbology = StandardDeviation(df["Herbology"], meanHerbology, countdf)
-
-    minArithmancy = Mymin(df["Arithmancy"])
-    minAstronomy = Mymin(df["Astronomy"])
-    minHerbology = Mymin(df["Herbology"])
-
-    maxArithmancy = Mymax(df["Arithmancy"])
-    maxAstronomy = Mymax(df["Astronomy"])
-    maxHerbology = Mymax(df["Herbology"])
-
-    medianArithmancy = MyMedian(df["Arithmancy"])
-    medianAstronomy = MyMedian(df["Astronomy"])
-    medianHerbology = MyMedian(df["Herbology"])
-    
-    quartile25Arithmancy = Myquartile25(df["Arithmancy"])
-    quartile25Astronomy = Myquartile25(df["Astronomy"])
-    quartile25Herbology = Myquartile25(df["Herbology"])
-
-    quartile75Arithmancy = Myquartile75(df["Arithmancy"])
-    quartile75Astronomy = Myquartile75(df["Astronomy"])
-    quartile75Herbology = Myquartile75(df["Herbology"])
-
+    print("      ", end="")
+    columns = df.columns
+    for column in columns:
+        print(column, "|",end="")
+    print()
+    for i in data:
+        print(i,"  ",end="")
+        for a in data[i]:
+            print(f"{a:.6f}"," ",end="")
+        print()
 
 def main():
     if not ParcingFile():
