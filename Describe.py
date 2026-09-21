@@ -3,7 +3,6 @@ from pathlib import Path
 import pandas as pd
 
 def ParcingFile():
-    print("Parsing file...")
     if len(sys.argv) != 2:
         print("Incorrect number of arguments. Please provide exactly one argument.")
         return False
@@ -11,24 +10,18 @@ def ParcingFile():
     if not path.is_file():
         print(f"The provided path '{path}' is not a valid file.")
         return False
-    print("parsing file completed successfully.")
     return True
 
 def DataCleaning():
-    print("Cleaning data...")
     df = pd.read_csv(sys.argv[1])
-    print(len(df))
     df = df.dropna()
-    print(len(df))
     df = df.drop_duplicates()
-    print(len(df))
     df = df.drop(columns = "First Name")
     df = df.drop(columns = "Last Name")
     df = df.drop(columns = "Birthday")
     df = df.drop(columns = "Best Hand")
     df = df.drop(columns = "Index")
     MyDescribe(df)
-    print("Data cleaning completed successfully.")
 
 def Mymean(column, count):
     sum = 0
@@ -56,10 +49,44 @@ def StandardDeviation(column, mean, count):
     std_dev = variance ** 0.5
     return std_dev
 
+
+def MyMedian(column):
+    sorted_column = sorted(column)
+    n = len(sorted_column)
+    if n % 2 == 1:
+        median = sorted_column[n // 2]
+    else:
+        median = (sorted_column[n // 2 - 1] + sorted_column[n // 2]) / 2
+    return median
+def Myquartile25(column):
+    sorted_column = sorted(column)
+    n = len(sorted_column)
+    quartile_index = n // 4
+    if quartile_index > 0:
+        return sorted_column[quartile_index - 1]
+    else:
+        return sorted_column[0]
+
+def Myquartile75(column):
+    sorted_column = sorted(column)
+    n = len(sorted_column)
+    quartile_index = 3 * n // 4
+    if quartile_index < n:
+        return sorted_column[quartile_index]
+    else:
+        return sorted_column[n - 1]
+
 def MyDescribe(df):
 
-    print("Describing data...")
     countdf = len(df)
+    print("arithmancy     astronomy     herbology")
+    data = [{
+        "count": countdf,
+        "countArithmancy": countdf,
+        "countAstronomy": countdf,
+        "countHerbology": countdf
+    }]
+
     meanArithmancy = Mymean(df["Arithmancy"],countdf)
     meanAstronomy = Mymean(df["Astronomy"],countdf)
     meanHerbology = Mymean(df["Herbology"],countdf)
@@ -75,6 +102,19 @@ def MyDescribe(df):
     maxArithmancy = Mymax(df["Arithmancy"])
     maxAstronomy = Mymax(df["Astronomy"])
     maxHerbology = Mymax(df["Herbology"])
+
+    medianArithmancy = MyMedian(df["Arithmancy"])
+    medianAstronomy = MyMedian(df["Astronomy"])
+    medianHerbology = MyMedian(df["Herbology"])
+    
+    quartile25Arithmancy = Myquartile25(df["Arithmancy"])
+    quartile25Astronomy = Myquartile25(df["Astronomy"])
+    quartile25Herbology = Myquartile25(df["Herbology"])
+
+    quartile75Arithmancy = Myquartile75(df["Arithmancy"])
+    quartile75Astronomy = Myquartile75(df["Astronomy"])
+    quartile75Herbology = Myquartile75(df["Herbology"])
+
 
 def main():
     if not ParcingFile():
