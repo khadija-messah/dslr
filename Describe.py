@@ -51,10 +51,10 @@ def StandardDeviation(column, mean, count):
     sum = 0
     for value in column:
         sum += (value - mean) ** 2
-    variance = sum / count if count > 0 else 0
+    variance = sum / (count - 1) if count > 1 else 0
     std_dev = variance ** 0.5
     return std_dev
-
+    
 
 def MyMedian(column):
     sorted_column = sorted(column)
@@ -118,7 +118,8 @@ def MyDescribe(df):
         for a in data[i]:
             print(f"{a:.6f}"," ",end="")
         print()
-
+    # print("----------------------------------")
+    # print(df.describe())
 def main():
     if not ParcingFile():
         return
