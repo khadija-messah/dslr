@@ -118,8 +118,7 @@ def MyDescribe(df):
         for a in data[i]:
             print(f"{a:.6f}"," ",end="")
         print()
-    # print("----------------------------------")
-    # print(df.describe())
+
 def main():
     if not ParcingFile():
         return
