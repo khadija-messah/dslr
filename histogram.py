@@ -3,13 +3,17 @@ import pandas as pd
 import numpy as np
 import os 
 import Describe
+
+
 def visualisation_histogramme(df, matiere):
     os.makedirs("histograms", exist_ok=True)
     maisons = df["Hogwarts House"].dropna().unique()
+    all_data = df[matiere].dropna()
+    bins = np.histogram_bin_edges(all_data, bins=15)
     fig, ax = plt.subplots(2, 2, figsize=(12, 8))
     for i, maison in enumerate(maisons):
         data = df[df["Hogwarts House"] == maison][matiere].dropna()
-        ax[i // 2, i % 2].hist(data, bins=15)
+        ax[i // 2, i % 2].hist(data, bins=bins)
         ax[i // 2, i % 2].set_title(f"Histogram of {matiere} in {maison}")
         ax[i // 2, i % 2].set_xlabel(matiere)
         ax[i // 2, i % 2].set_ylabel("Frequency")
@@ -59,6 +63,6 @@ def main():
         stats = calcule_stats(df, matiere)
         compare_stats(stats, df["Hogwarts House"].dropna().unique(),matiere)
         print("===============================================")
-    print("Hogwarts course has a homogeneous score distribution between all four houses for the course: Care of Magical Creatures")
+    print("The four houses have similar score distributions in Care of Magical Creatures. Their means, medians and standard deviations are close, and the histograms show similar shapes")
 if __name__ == "__main__":
     main()
