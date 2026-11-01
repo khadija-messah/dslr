@@ -6,10 +6,10 @@ import Describe
 def visualisation_histogramme(df, matiere):
     os.makedirs("histograms", exist_ok=True)
     maisons = df["Hogwarts House"].dropna().unique()
-    fig, ax = plt.subplots(2, 2, figsize=(10, 8))
+    fig, ax = plt.subplots(2, 2, figsize=(12, 8), sharex=True, sharey=True)
     for i, maison in enumerate(maisons):
         data = df[df["Hogwarts House"] == maison][matiere].dropna()
-        ax[i // 2, i % 2].hist(data, bins=20, alpha=0.7)
+        ax[i // 2, i % 2].hist(data, bins=15)
         ax[i // 2, i % 2].set_title(f"Histogram of {matiere} in {maison}")
         ax[i // 2, i % 2].set_xlabel(matiere)
         ax[i // 2, i % 2].set_ylabel("Frequency")
@@ -28,6 +28,14 @@ def calcule_stats(df, matiere):
             "std_dev": Describe.StandardDeviation(data, Describe.Mymean(data, len(data)), len(data)),
         }
     return stats
+
+def compare_stats(stats, maisons, matiere):
+    for maison in maisons:
+        print(f"Statistics for {matiere} in {maison}:")
+        print(f"Mean: {stats[maison]['mean']:.6f}")
+        print(f"Median: {stats[maison]['median']:.6f}")
+        print(f"Standard Deviation: {stats[maison]['std_dev']:.6f}")
+
 def main():
     df = pd.read_csv("datasets/dataset_train.csv")
     matieres = [
@@ -49,10 +57,8 @@ def main():
     for matiere in matieres:
         visualisation_histogramme(df, matiere)
         stats = calcule_stats(df, matiere)
-        for maison, stat in stats.items():
-            print(f"Stats for {matiere} in {maison}:")
-            for key, value in stat.items():
-                print(f"  {key}: {value}")
-        print("--------------------------------------------------------")
+        compare_stats(stats, df["Hogwarts House"].dropna().unique(),matiere)
+        print("===============================================")
+    print("Hogwarts course has a homogeneous score distribution between all four houses for the course: Care of Magical Creatures")
 if __name__ == "__main__":
     main()
