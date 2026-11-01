@@ -6,7 +6,7 @@ import Describe
 def visualisation_histogramme(df, matiere):
     os.makedirs("histograms", exist_ok=True)
     maisons = df["Hogwarts House"].dropna().unique()
-    fig, ax = plt.subplots(2, 2, figsize=(12, 8), sharex=True, sharey=True)
+    fig, ax = plt.subplots(2, 2, figsize=(12, 8))
     for i, maison in enumerate(maisons):
         data = df[df["Hogwarts House"] == maison][matiere].dropna()
         ax[i // 2, i % 2].hist(data, bins=15)
